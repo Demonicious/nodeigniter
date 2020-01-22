@@ -22,7 +22,7 @@ class Instance {
     controllers : any = {};
     routes : any = {};
 
-    config : InstanceConfig = 
+    config : InstanceConfig =
     {   port: 80,
         paths: {
             models: '',
@@ -57,9 +57,9 @@ class Instance {
         if(this.config != config) {
             this.config = config;
             let dirContent = fs.readdirSync(this.config.paths.controllers, {encoding:"utf8"});
-            dirContent.forEach(file => {
+            dirContent.forEach((file :string) => {
                 let name = file.replace('.js', '');
-                name = file.replace('.ts', '');
+                name = name.replace('.ts', '');
                 import(`${this.config.paths.controllers}/${name}`).then(controller => {
                     this.controllers[name] = controller.default;
                 }).catch((reason) => {
@@ -85,7 +85,7 @@ class Instance {
                     if(destination.includes('/')) {
                         return;
                     } else {
-                        let controller = this.controllers[destination]();
+                        let controller = new this.controllers[destination];
                         return controller._preProcessingRoute_(this, req, res, 'index');
                     }
                 })

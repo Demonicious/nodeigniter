@@ -7,7 +7,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 const ejs = __importStar(require("ejs"));
-class Loader {
+class C_Loader {
     constructor(res, viewFolder, modelFolder) {
         this.res = null;
         this.viewFolder = "";
@@ -28,4 +28,4 @@ class Loader {
         });
     }
 }
-module.exports = Loader;
+module.exports = C_Loader;

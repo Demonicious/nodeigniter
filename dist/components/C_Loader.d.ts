@@ -1,4 +1,4 @@
-declare class Loader {
+declare class C_Loader {
     res: any;
     viewFolder: string;
     modelFolder: string;
@@ -6,4 +6,4 @@ declare class Loader {
     constructor(res: any, viewFolder: string, modelFolder: string);
     view(viewName: string, data: any): void;
 }
-export = Loader;
+export = C_Loader;

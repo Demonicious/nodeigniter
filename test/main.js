@@ -15,7 +15,8 @@ const config = {
 }
 
 const routes = {
-    '/': 'MainController'
+    '/': 'MainController',
+    '/:id/:username': 'MainController',
 }
 
 ni.configure(config);

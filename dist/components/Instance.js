@@ -46,9 +46,9 @@ class Instance {
         if (this.config != config) {
             this.config = config;
             let dirContent = fs.readdirSync(this.config.paths.controllers, { encoding: "utf8" });
-            dirContent.forEach(file => {
+            dirContent.forEach((file) => {
                 let name = file.replace('.js', '');
-                name = file.replace('.ts', '');
+                name = name.replace('.ts', '');
                 Promise.resolve().then(() => __importStar(require(`${this.config.paths.controllers}/${name}`))).then(controller => {
                     this.controllers[name] = controller.default;
                 }).catch((reason) => {
@@ -78,7 +78,7 @@ class Instance {
                         return;
                     }
                     else {
-                        let controller = this.controllers[destination]();
+                        let controller = new this.controllers[destination];
                         return controller._preProcessingRoute_(this, req, res, 'index');
                     }
                 });
