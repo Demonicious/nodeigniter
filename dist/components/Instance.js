@@ -79,7 +79,6 @@ class Instance {
                     }
                     else {
                         let controller = this.controllers[destination]();
-                        console.log(this.controllers);
                         return controller._preProcessingRoute_(this, req, res, 'index');
                     }
                 });
