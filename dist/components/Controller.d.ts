@@ -24,6 +24,7 @@ declare class Controller {
     _http: HttpObject;
     _toRender: string;
     input: InputObject;
+    library: any;
     load: ControllerLoaderObject;
     set_headers: Function;
     private render;

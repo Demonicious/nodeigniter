@@ -1,4 +1,4 @@
-import { Instance, Logger } from "../module";
+import { Instance, Logger, Functions } from "../module";
 import * as ejs from "ejs";
 
 interface HttpHeadersObject {
@@ -42,20 +42,22 @@ class Controller {
         post : {},
         params: {},
     }
+    library : any = {};
     load : ControllerLoaderObject = {
         view: (viewName : string, data : any) => {
-            ejs.renderFile(`${this._instance.config.paths.views}/${viewName}.ejs`, data, {}, (err, data) => {
-                if(err) {
-                    throw(err);
-                } else {
-                    this._toRender += data;
-                }
-            })
+            this._toRender += Functions.loadView(this._instance.config.paths.views, viewName, data);
+            return;
         },
         model: (modelName : string) => {
+            let name = modelName.replace(".js", "");
+            name = name.replace(".ts", "");
+            this[name] = Functions.loadModel(this._instance.config.paths, modelName);
             return;
         },
         library: (libraryName : string) => {
+            let name = libraryName.replace(".js", "");
+            name = name.replace(".ts", "");
+            this.library[name] = Functions.loadLibrary(this._instance.config.paths, libraryName);
             return;
         },
         config: (configName : string) => {

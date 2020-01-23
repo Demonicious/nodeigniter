@@ -1,13 +1,5 @@
 "use strict";
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 const module_1 = require("../module");
-const ejs = __importStar(require("ejs"));
 class Controller {
     constructor() {
         this._instance = null;
@@ -27,21 +19,22 @@ class Controller {
             post: {},
             params: {},
         };
+        this.library = {};
         this.load = {
             view: (viewName, data) => {
-                ejs.renderFile(`${this._instance.config.paths.views}/${viewName}.ejs`, data, {}, (err, data) => {
-                    if (err) {
-                        throw (err);
-                    }
-                    else {
-                        this._toRender += data;
-                    }
-                });
+                this._toRender += module_1.Functions.loadView(this._instance.config.paths.views, viewName, data);
+                return;
             },
             model: (modelName) => {
+                let name = modelName.replace(".js", "");
+                name = name.replace(".ts", "");
+                this[name] = module_1.Functions.loadModel(this._instance.config.paths, modelName);
                 return;
             },
             library: (libraryName) => {
+                let name = libraryName.replace(".js", "");
+                name = name.replace(".ts", "");
+                this.library[name] = module_1.Functions.loadLibrary(this._instance.config.paths, libraryName);
                 return;
             },
             config: (configName) => {

@@ -5,11 +5,8 @@ class MainController extends Controller {
         let data = {
             pageTitle: 'A Simple Form.',
         }
-
-        if('full_name' in this.input.post) {
-            console.log('yes');
-        }
-
+        this.load.library('payments');
+        this.library.payments.someMethod();
         this.load.view('index', data);
     }
 }
