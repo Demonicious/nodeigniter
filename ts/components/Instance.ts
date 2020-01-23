@@ -7,27 +7,33 @@ interface PathObject {
     models : string,
     views : string,
     controllers : string,
+    libraries : string,
+    configs : string
     static : string,
 }
 
 interface InstanceConfig {
     port : number,
+    static_route : string,
     paths : PathObject,
     reportRequests : boolean,
     environment : "DEVELOPMENT" | "PRODUCTION",
 }
 
 class Instance {
-    app : express.Application = express.default();
+    exp : express.Application = express.default();
     controllers : any = {};
     routes : any = {};
 
     config : InstanceConfig =
     {   port: 80,
+        static_route: '/static',
         paths: {
             models: '',
             views: '',
             controllers: '',
+            libraries: '',
+            configs: '',
             static: '',
         },
         reportRequests: true,
@@ -47,10 +53,11 @@ class Instance {
         return this;
     }
 
-    public setParsers(parsers : string[]) {
+    public setParsers(parsers : string[]) : Instance {
         if(this.parsers != parsers) {
             this.parsers = parsers;
         }
+        return this;
     }
 
     public configure(config : InstanceConfig) : Instance {
@@ -74,13 +81,15 @@ class Instance {
 
     public launch() : void {
         if(this.configured) {
-            if(this.parsers.includes('json')) this.app.use(body_parser.json());
-            if(this.parsers.includes('url_encoded')) this.app.use(body_parser.urlencoded({extended: true}));
-            if(this.parsers.includes('text')) this.app.use(body_parser.text());
-            if(this.parsers.includes('raw')) this.app.use(body_parser.raw());
+            this.exp.use(this.config.static_route, express.static(this.config.paths.static));
+            if(this.parsers.includes('json')) this.exp.use(body_parser.json());
+            if(this.parsers.includes('url_encoded')) this.exp.use(body_parser.urlencoded({extended: true}));
+            if(this.parsers.includes('text')) this.exp.use(body_parser.text());
+            if(this.parsers.includes('raw')) this.exp.use(body_parser.raw());
             let routePaths = Object.keys(this.routes);
+
             routePaths.map((val) => {
-                this.app.all(val, (req, res) => {
+                this.exp.all(val, (req, res) => {
                     let destination : string = this.routes[val];
                     if(destination.includes('/')) {
                         return;
@@ -90,7 +99,7 @@ class Instance {
                     }
                 })
             })
-            this.app.listen(this.config.port, () => {
+            this.exp.listen(this.config.port, () => {
                 this.log.info(`Server Listening on Port: ${this.config.port}`);
             });
         } else {

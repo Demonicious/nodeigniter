@@ -1,5 +1,13 @@
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 const module_1 = require("../module");
+const ejs = __importStar(require("ejs"));
 class Controller {
     constructor() {
         this._instance = null;
@@ -13,10 +21,32 @@ class Controller {
                 }
             }
         };
+        this._toRender = '';
         this.input = {
             get: {},
             post: {},
             params: {},
+        };
+        this.load = {
+            view: (viewName, data) => {
+                ejs.renderFile(`${this._instance.config.paths.views}/${viewName}.ejs`, data, {}, (err, data) => {
+                    if (err) {
+                        throw (err);
+                    }
+                    else {
+                        this._toRender += data;
+                    }
+                });
+            },
+            model: (modelName) => {
+                return;
+            },
+            library: (libraryName) => {
+                return;
+            },
+            config: (configName) => {
+                return;
+            }
         };
         this.set_headers = (code, headers) => {
             this._http.head.code = code;
@@ -24,7 +54,7 @@ class Controller {
         };
         this.render = () => {
             this._http.response.writeHead(this._http.head.code, this._http.head.headers);
-            this._http.response.write(this.load.renderAble);
+            this._http.response.write(this._toRender);
             this._http.response.end();
         };
         this._log = new module_1.Logger;
@@ -38,7 +68,6 @@ class Controller {
                 post: req.body,
                 params: req.params,
             };
-        this.load = new module_1.C_Loader(res, this._instance.config.paths.views, this._instance.config.paths.models);
         this[method]();
         this.render();
     }

@@ -1,13 +1,21 @@
-import { Instance, C_Loader, Logger } from "../module";
+import { Instance, Logger } from "../module";
+import * as ejs from "ejs";
 
-interface HttpHeaders {
+interface HttpHeadersObject {
     code : number,
     headers : any,
 }
 interface HttpObject {
     request : Request | any,
     response : Response | any,
-    head : HttpHeaders,
+    head : HttpHeadersObject,
+}
+
+interface ControllerLoaderObject {
+    view : Function,
+    model : Function,
+    library : Function,
+    config : Function
 }
 
 interface InputObject {
@@ -28,19 +36,39 @@ class Controller {
             }
         }
     }
+    _toRender : string = '';
     input: InputObject = {
         get : {},
         post : {},
         params: {},
     }
-    load : C_Loader | any;
+    load : ControllerLoaderObject = {
+        view: (viewName : string, data : any) => {
+            ejs.renderFile(`${this._instance.config.paths.views}/${viewName}.ejs`, data, {}, (err, data) => {
+                if(err) {
+                    throw(err);
+                } else {
+                    this._toRender += data;
+                }
+            })
+        },
+        model: (modelName : string) => {
+            return;
+        },
+        library: (libraryName : string) => {
+            return;
+        },
+        config: (configName : string) => {
+            return;
+        }
+    };
     set_headers : Function = (code : number, headers : any) => {
         this._http.head.code = code;
         this._http.head.headers = headers;
     }
     private render : Function = () => {
         this._http.response.writeHead(this._http.head.code, this._http.head.headers);
-        this._http.response.write(this.load.renderAble);
+        this._http.response.write(this._toRender);
         this._http.response.end();
     }
     _log : Logger = new Logger;
@@ -55,7 +83,6 @@ class Controller {
             post: req.body,
             params: req.params,
         }
-        this.load = new C_Loader(res, this._instance.config.paths.views, this._instance.config.paths.models);
         this[method]();
         this.render();
     }

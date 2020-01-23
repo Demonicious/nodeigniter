@@ -12,14 +12,17 @@ const body_parser = __importStar(require("body-parser"));
 const fs = __importStar(require("fs"));
 class Instance {
     constructor() {
-        this.app = express.default();
+        this.exp = express.default();
         this.controllers = {};
         this.routes = {};
         this.config = { port: 80,
+            static_route: '/static',
             paths: {
                 models: '',
                 views: '',
                 controllers: '',
+                libraries: '',
+                configs: '',
                 static: '',
             },
             reportRequests: true,
@@ -41,6 +44,7 @@ class Instance {
         if (this.parsers != parsers) {
             this.parsers = parsers;
         }
+        return this;
     }
     configure(config) {
         if (this.config != config) {
@@ -62,17 +66,18 @@ class Instance {
     }
     launch() {
         if (this.configured) {
+            this.exp.use(this.config.static_route, express.static(this.config.paths.static));
             if (this.parsers.includes('json'))
-                this.app.use(body_parser.json());
+                this.exp.use(body_parser.json());
             if (this.parsers.includes('url_encoded'))
-                this.app.use(body_parser.urlencoded({ extended: true }));
+                this.exp.use(body_parser.urlencoded({ extended: true }));
             if (this.parsers.includes('text'))
-                this.app.use(body_parser.text());
+                this.exp.use(body_parser.text());
             if (this.parsers.includes('raw'))
-                this.app.use(body_parser.raw());
+                this.exp.use(body_parser.raw());
             let routePaths = Object.keys(this.routes);
             routePaths.map((val) => {
-                this.app.all(val, (req, res) => {
+                this.exp.all(val, (req, res) => {
                     let destination = this.routes[val];
                     if (destination.includes('/')) {
                         return;
@@ -83,7 +88,7 @@ class Instance {
                     }
                 });
             });
-            this.app.listen(this.config.port, () => {
+            this.exp.listen(this.config.port, () => {
                 this.log.info(`Server Listening on Port: ${this.config.port}`);
             });
         }

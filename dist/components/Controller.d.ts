@@ -1,12 +1,18 @@
-import { Instance, C_Loader, Logger } from "../module";
-interface HttpHeaders {
+import { Instance, Logger } from "../module";
+interface HttpHeadersObject {
     code: number;
     headers: any;
 }
 interface HttpObject {
     request: Request | any;
     response: Response | any;
-    head: HttpHeaders;
+    head: HttpHeadersObject;
+}
+interface ControllerLoaderObject {
+    view: Function;
+    model: Function;
+    library: Function;
+    config: Function;
 }
 interface InputObject {
     get: any;
@@ -16,8 +22,9 @@ interface InputObject {
 declare class Controller {
     _instance: Instance | any;
     _http: HttpObject;
+    _toRender: string;
     input: InputObject;
-    load: C_Loader | any;
+    load: ControllerLoaderObject;
     set_headers: Function;
     private render;
     _log: Logger;

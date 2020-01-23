@@ -1,24 +1,9 @@
-const { resolve } = require('path');
-const Nodeigniter = require('./../dist/module');
-const ni = new Nodeigniter.Instance; 
+const NodeIgniter = require('./../dist/module');
 
-const config = {
-    port: 80,
-    paths: {
-        views: resolve('./app/views'),
-        models: resolve('./app/models'),
-        controllers: resolve('./app/controllers'),
-        static: resolve('./static'),
-    },
-    reportRequests: true,
-    environment: "DEVELOPMENT",
-}
+const config = require('./app/config/config');
+const routes = require('./app/config/routes');
 
-const routes = {
-    '/': 'MainController',
-    '/:id/:username': 'MainController',
-}
-
-ni.configure(config);
-ni.registerRoutes(routes);
-ni.launch();
+const app = new NodeIgniter.Instance;
+app.configure(config);
+app.registerRoutes(routes);
+app.launch();
