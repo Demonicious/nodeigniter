@@ -8,7 +8,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ejs = __importStar(require("ejs"));
-const module_1 = require("./../module");
+const module_1 = require("./../../module");
 const Functions = {
     loadView: (viewsPath, name, data) => {
         var returnStr = "";

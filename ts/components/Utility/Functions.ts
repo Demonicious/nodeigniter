@@ -1,5 +1,5 @@
 import * as ejs from "ejs";
-import { Logger } from "./../module";
+import { Logger } from "./../../module";
 
 const Functions = {
     loadView : (viewsPath, name, data) => {

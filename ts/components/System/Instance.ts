@@ -1,4 +1,4 @@
-import { Logger } from "./../module";
+import { Logger } from "./../../module";
 import * as express from "express";
 import express_session from "express-session";
 import * as body_parser from "body-parser";

@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { Logger } from "./../module";
+import { Logger } from "./../../module";
 import * as express from "express";
 import * as fs from "fs";
 interface PathObject {

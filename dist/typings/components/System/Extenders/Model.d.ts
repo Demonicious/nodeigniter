@@ -1,4 +1,4 @@
-import { Logger, Session } from "./../module";
+import { Logger, Session } from "./../../../module";
 interface ModelLoaderObject {
     model: Function;
     library: Function;

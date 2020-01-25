@@ -1,4 +1,4 @@
-import { Instance, Logger, Session } from "../module";
+import { Instance, Logger, Session } from "../../../module";
 interface HttpHeadersObject {
     code: number;
     headers: any;

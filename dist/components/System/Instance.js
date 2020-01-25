@@ -10,7 +10,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const module_1 = require("./../module");
+const module_1 = require("./../../module");
 const express = __importStar(require("express"));
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser = __importStar(require("body-parser"));

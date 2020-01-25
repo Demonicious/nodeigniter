@@ -1,4 +1,4 @@
-import { Functions } from "./../module";
+import { Functions } from "./../../../module";
 
 class Library {
     ni : any = {};

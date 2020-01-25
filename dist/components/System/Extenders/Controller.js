@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const module_1 = require("../module");
+const module_1 = require("../../../module");
 class Controller {
     constructor() {
         this._instance = null;
