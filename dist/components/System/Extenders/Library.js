@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const module_1 = require("./../../../module");
 class Library {
-    constructor(paths, req) {
+    constructor(paths, req, db) {
         this.ni = {};
         this._paths = {};
         this._http = {
@@ -14,16 +14,17 @@ class Library {
             library: {},
             config: {},
             model: {},
+            db: db,
             load: {
                 model: (modelName) => {
                     let name = modelName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this['ni'].model[name] = module_1.Functions.loadModel(this._paths, this._http.request, modelName);
+                    this['ni'].model[name] = module_1.Functions.loadModel(this._paths, this._http.request, this.ni.db, modelName);
                 },
                 library: (libraryName) => {
                     let name = libraryName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this.ni.library[name] = module_1.Functions.loadLibrary(this._paths, this._http.request, libraryName);
+                    this.ni.library[name] = module_1.Functions.loadLibrary(this._paths, this._http.request, this.ni.db, libraryName);
                 },
                 config: (configName) => {
                     let name = configName.replace('.js', '');

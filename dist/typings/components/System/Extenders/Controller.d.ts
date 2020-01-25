@@ -28,10 +28,11 @@ declare class Controller {
     library: any;
     model: any;
     config: any;
+    db: any;
     load: ControllerLoaderObject;
     set_headers: Function;
     private render;
     _log: Logger;
-    _preProcessingRoute_(app: Instance, req: any, res: any, method: string): void;
+    _preProcessingRoute_(app: Instance, req: any, res: any, method: string, db: any): void;
 }
 export { Controller };

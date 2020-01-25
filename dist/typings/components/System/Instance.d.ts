@@ -22,12 +22,15 @@ declare class Instance {
     exp: express.Application;
     controllers: any;
     routes: any;
+    _db: any;
+    database_controller: any;
     config: InstanceConfig;
     configured: boolean;
     parsers: string[];
     log: Logger;
     registerRoutes(routes: any): Instance;
     setParsers(parsers: string[]): Instance;
+    setDatabase(details: any): void;
     configure(config: InstanceConfig): Instance;
     launch(): void;
 }

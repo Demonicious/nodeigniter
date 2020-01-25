@@ -18,7 +18,7 @@ declare class Model {
     config: any;
     model: any;
     session: Session | any;
-    constructor(paths: any, req: any);
+    constructor(paths: any, req: any, db: any);
     load: ModelLoaderObject;
     input: InputObject | any;
 }

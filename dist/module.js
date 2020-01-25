@@ -14,3 +14,5 @@ const Functions_1 = require("./components/Utility/Functions");
 exports.Functions = Functions_1.Functions;
 const Session_1 = require("./components/System/Sessions/Session");
 exports.Session = Session_1.Session;
+const MySQL_1 = require("./components/System/Database/MySQL");
+exports.MySQL = MySQL_1.MySQL;

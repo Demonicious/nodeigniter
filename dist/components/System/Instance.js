@@ -20,6 +20,11 @@ class Instance {
         this.exp = express.default();
         this.controllers = {};
         this.routes = {};
+        this._db = {
+            type: null,
+            details: null,
+        };
+        this.database_controller = null;
         this.config = { port: 80,
             session_secret: '',
             static_route: '/static',
@@ -52,6 +57,12 @@ class Instance {
         }
         return this;
     }
+    setDatabase(details) {
+        this._db = {
+            type: 1,
+            details: details
+        };
+    }
     configure(config) {
         if (this.config != config) {
             this.config = config;
@@ -82,6 +93,11 @@ class Instance {
                     maxAge: 2592000000,
                 }
             }));
+            if (this._db.type != null) {
+                if (this._db.type == 1) {
+                    this.database_controller = new module_1.MySQL(this._db.details);
+                }
+            }
             if (this.parsers.includes('json'))
                 this.exp.use(body_parser.json());
             if (this.parsers.includes('url_encoded'))
@@ -92,16 +108,40 @@ class Instance {
                 this.exp.use(body_parser.raw());
             let routePaths = Object.keys(this.routes);
             routePaths.map((val) => {
-                this.exp.all(val, (req, res) => {
-                    let destination = this.routes[val];
+                if (val != "_404") {
+                    this.exp.all(val, (req, res) => {
+                        let destination = this.routes[val];
+                        if (destination.includes('/')) {
+                            destination = destination.split('/');
+                            let controller = new this.controllers[destination[0]];
+                            return controller._preProcessingRoute_(this, req, res, destination[1], this.database_controller);
+                        }
+                        else {
+                            let controller = new this.controllers[destination];
+                            return controller._preProcessingRoute_(this, req, res, 'index', this.database_controller);
+                        }
+                    });
+                }
+            });
+            this.exp.all('*', (req, res) => {
+                if (this.routes['_404']) {
+                    let destination = this.routes['_404'];
                     if (destination.includes('/')) {
-                        return;
+                        destination = destination.split('/');
+                        let controller = new this.controllers[destination[0]];
+                        return controller._preProcessingRoute_(this, req, res, destination[1], this.database_controller);
                     }
                     else {
                         let controller = new this.controllers[destination];
-                        return controller._preProcessingRoute_(this, req, res, 'index');
+                        return controller._preProcessingRoute_(this, req, res, 'index', this.database_controller);
                     }
-                });
+                }
+                else {
+                    res.writeHead(404, { 'Content-Type': 'text/html' });
+                    res.write(`<pre>Cannot ${req.method} ${req.url}</pre>`);
+                    res.end();
+                    return;
+                }
             });
             this.exp.listen(this.config.port, () => {
                 this.log.info(`Server Listening on Port: ${this.config.port}`);

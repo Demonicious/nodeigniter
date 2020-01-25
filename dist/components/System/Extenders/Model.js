@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const module_1 = require("./../../../module");
 class Model {
-    constructor(paths, req) {
+    constructor(paths, req, db) {
         this._log = new module_1.Logger;
         this._paths = {};
         this._http = {
@@ -17,13 +17,13 @@ class Model {
             model: (modelName) => {
                 let name = modelName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this.model[name] = module_1.Functions.loadModel(this._paths, this._http.request, name);
+                this.model[name] = module_1.Functions.loadModel(this._paths, this._http.request, this.db, name);
                 return;
             },
             library: (libraryName) => {
                 let name = libraryName.replace('.js', '');
                 name = name.replace('.ts', '');
-                this.library[name] = module_1.Functions.loadLibrary(this._paths, this._http.request, libraryName);
+                this.library[name] = module_1.Functions.loadLibrary(this._paths, this._http.request, this.db, libraryName);
             },
             config: (configName) => {
                 let name = configName.replace(".js", "");
@@ -34,6 +34,7 @@ class Model {
         this.input = null;
         this._paths = paths;
         this._http.request = req;
+        this.db = db;
         this.session = new module_1.Session(this._http.request);
     }
 }

@@ -26,17 +26,17 @@ const Functions = {
             return e;
         }
     },
-    loadModel : (paths, req, name) => {
+    loadModel : (paths, req, db, name) => {
         try {
-            let model = new (require(`${paths.models}/${name}`))(paths, req);
+            let model = new (require(`${paths.models}/${name}`))(paths, db, req);
             return model;
         } catch(e) {
             return e;
         }
     },
-    loadLibrary: (paths, req, name) => {
+    loadLibrary: (paths, req, db, name) => {
         try {
-            let lib = new (require(`${paths.libraries}/${name}`))(paths, req);
+            let lib = new (require(`${paths.libraries}/${name}`))(paths, db, req);
             return lib;
         } catch(e) {
             return e;

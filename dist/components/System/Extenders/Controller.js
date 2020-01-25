@@ -24,6 +24,7 @@ class Controller {
         this.library = {};
         this.model = {};
         this.config = {};
+        this.db = {};
         this.load = {
             view: (viewName, data) => {
                 this._toRender += module_1.Functions.loadView(this._instance.config.paths.views, viewName, data);
@@ -32,13 +33,13 @@ class Controller {
             model: (modelName) => {
                 let name = modelName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this.model[name] = module_1.Functions.loadModel(this._instance.config.paths, this._http.request, modelName);
+                this.model[name] = module_1.Functions.loadModel(this._instance.config.paths, this._http.request, this.db, modelName);
                 return;
             },
             library: (libraryName) => {
                 let name = libraryName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this.library[name] = module_1.Functions.loadLibrary(this._instance.config.paths, this._http.request, libraryName);
+                this.library[name] = module_1.Functions.loadLibrary(this._instance.config.paths, this._http.request, this.db, libraryName);
                 return;
             },
             config: (configName) => {
@@ -58,11 +59,12 @@ class Controller {
         };
         this._log = new module_1.Logger;
     }
-    _preProcessingRoute_(app, req, res, method) {
+    _preProcessingRoute_(app, req, res, method, db) {
         this._instance = app;
         this._http.request = req,
             this._http.response = res,
             this.session = new module_1.Session(this._http.request);
+        this.db = db;
         this.input = {
             get: req.query,
             post: req.body,
