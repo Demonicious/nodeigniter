@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class Logger {
     constructor() {
         this.error = (msg) => console.log("\x1b[31m", `[ERROR]: ${msg}`);
@@ -6,4 +7,4 @@ class Logger {
         this.info = (msg) => console.log("\x1b[36m", `[INFO]: ${msg}`);
     }
 }
-module.exports = Logger;
+exports.Logger = Logger;

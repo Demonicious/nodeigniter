@@ -1,5 +1,4 @@
-import { Instance, Logger, Functions } from "../module";
-import * as ejs from "ejs";
+import { Instance, Logger, Functions, Session } from "../module";
 
 interface HttpHeadersObject {
     code : number,
@@ -42,7 +41,10 @@ class Controller {
         post : {},
         params: {},
     }
+    session: Session | any = null; 
     library : any = {};
+    model : any = {};
+    config : any = {};
     load : ControllerLoaderObject = {
         view: (viewName : string, data : any) => {
             this._toRender += Functions.loadView(this._instance.config.paths.views, viewName, data);
@@ -51,17 +53,19 @@ class Controller {
         model: (modelName : string) => {
             let name = modelName.replace(".js", "");
             name = name.replace(".ts", "");
-            this[name] = Functions.loadModel(this._instance.config.paths, modelName);
+            this.model[name] = Functions.loadModel(this._instance.config.paths, this._http.request, modelName);
             return;
         },
         library: (libraryName : string) => {
             let name = libraryName.replace(".js", "");
             name = name.replace(".ts", "");
-            this.library[name] = Functions.loadLibrary(this._instance.config.paths, libraryName);
+            this.library[name] = Functions.loadLibrary(this._instance.config.paths, this._http.request, libraryName);
             return;
         },
         config: (configName : string) => {
-            return;
+            let name = configName.replace(".js", "");
+            name = name.replace(".ts", "");
+            this.config[name] = Functions.loadConfig(this._instance.config.paths.configs, configName);
         }
     };
     set_headers : Function = (code : number, headers : any) => {
@@ -79,7 +83,7 @@ class Controller {
         this._instance = app;
         this._http.request = req,
         this._http.response = res,
-
+        this.session = new Session(this._http.request);
         this.input = {
             get: req.query,
             post: req.body,
@@ -87,7 +91,8 @@ class Controller {
         }
         this[method]();
         this.render();
+        return;
     }
 }
 
-export = Controller;
+export { Controller };

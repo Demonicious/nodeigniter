@@ -1,4 +1,4 @@
-import { Instance, Logger } from "../module";
+import { Instance, Logger, Session } from "../module";
 interface HttpHeadersObject {
     code: number;
     headers: any;
@@ -24,11 +24,14 @@ declare class Controller {
     _http: HttpObject;
     _toRender: string;
     input: InputObject;
+    session: Session | any;
     library: any;
+    model: any;
+    config: any;
     load: ControllerLoaderObject;
     set_headers: Function;
     private render;
     _log: Logger;
     _preProcessingRoute_(app: Instance, req: any, res: any, method: string): void;
 }
-export = Controller;
+export { Controller };

@@ -1,4 +1,4 @@
-import { Logger } from "./../module";
+import { Logger, Session } from "./../module";
 interface ModelLoaderObject {
     model: Function;
     library: Function;
@@ -12,10 +12,14 @@ interface InputObject {
 declare class Model {
     _log: Logger;
     _paths: any;
+    _http: any;
     db: any;
     library: any;
-    constructor(paths: any);
+    config: any;
+    model: any;
+    session: Session | any;
+    constructor(paths: any, req: any);
     load: ModelLoaderObject;
     input: InputObject | any;
 }
-export = Model;
+export { Model };

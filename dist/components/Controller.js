@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const module_1 = require("../module");
 class Controller {
     constructor() {
@@ -19,7 +20,10 @@ class Controller {
             post: {},
             params: {},
         };
+        this.session = null;
         this.library = {};
+        this.model = {};
+        this.config = {};
         this.load = {
             view: (viewName, data) => {
                 this._toRender += module_1.Functions.loadView(this._instance.config.paths.views, viewName, data);
@@ -28,17 +32,19 @@ class Controller {
             model: (modelName) => {
                 let name = modelName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this[name] = module_1.Functions.loadModel(this._instance.config.paths, modelName);
+                this.model[name] = module_1.Functions.loadModel(this._instance.config.paths, this._http.request, modelName);
                 return;
             },
             library: (libraryName) => {
                 let name = libraryName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this.library[name] = module_1.Functions.loadLibrary(this._instance.config.paths, libraryName);
+                this.library[name] = module_1.Functions.loadLibrary(this._instance.config.paths, this._http.request, libraryName);
                 return;
             },
             config: (configName) => {
-                return;
+                let name = configName.replace(".js", "");
+                name = name.replace(".ts", "");
+                this.config[name] = module_1.Functions.loadConfig(this._instance.config.paths.configs, configName);
             }
         };
         this.set_headers = (code, headers) => {
@@ -56,13 +62,15 @@ class Controller {
         this._instance = app;
         this._http.request = req,
             this._http.response = res,
-            this.input = {
-                get: req.query,
-                post: req.body,
-                params: req.params,
-            };
+            this.session = new module_1.Session(this._http.request);
+        this.input = {
+            get: req.query,
+            post: req.body,
+            params: req.params,
+        };
         this[method]();
         this.render();
+        return;
     }
 }
-module.exports = Controller;
+exports.Controller = Controller;

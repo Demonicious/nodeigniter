@@ -1,19 +1,22 @@
+/// <reference types="node" />
 import { Logger } from "./../module";
 import * as express from "express";
+import * as fs from "fs";
 interface PathObject {
-    models: string;
-    views: string;
-    controllers: string;
-    libraries: string;
-    configs: string;
-    static: string;
+    models: fs.PathLike;
+    views: fs.PathLike;
+    controllers: fs.PathLike;
+    libraries: fs.PathLike;
+    configs: fs.PathLike;
+    static: fs.PathLike;
 }
 interface InstanceConfig {
     port: number;
+    session_secret: string;
     static_route: string;
     paths: PathObject;
     reportRequests: boolean;
-    environment: "DEVELOPMENT" | "PRODUCTION";
+    environment: string | 'DEVELOPMENT' | 'PRODUCTION';
 }
 declare class Instance {
     exp: express.Application;
@@ -28,4 +31,4 @@ declare class Instance {
     configure(config: InstanceConfig): Instance;
     launch(): void;
 }
-export = Instance;
+export { Instance };

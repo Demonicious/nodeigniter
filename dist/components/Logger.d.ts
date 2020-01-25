@@ -3,4 +3,4 @@ declare class Logger {
     warning: (msg: string) => void;
     info: (msg: string) => void;
 }
-export = Logger;
+export { Logger };

@@ -1,23 +1,25 @@
 import { Logger } from "./../module";
 import * as express from "express";
+import express_session from "express-session";
 import * as body_parser from "body-parser";
 import * as fs from "fs";
 
 interface PathObject {
-    models : string,
-    views : string,
-    controllers : string,
-    libraries : string,
-    configs : string
-    static : string,
+    models : fs.PathLike,
+    views : fs.PathLike,
+    controllers : fs.PathLike,
+    libraries : fs.PathLike,
+    configs : fs.PathLike
+    static : fs.PathLike,
 }
 
 interface InstanceConfig {
     port : number,
+    session_secret : string,
     static_route : string,
     paths : PathObject,
     reportRequests : boolean,
-    environment : "DEVELOPMENT" | "PRODUCTION",
+    environment : string | 'DEVELOPMENT' | 'PRODUCTION',
 }
 
 class Instance {
@@ -27,6 +29,7 @@ class Instance {
 
     config : InstanceConfig =
     {   port: 80,
+        session_secret: '',
         static_route: '/static',
         paths: {
             models: '',
@@ -81,7 +84,16 @@ class Instance {
 
     public launch() : void {
         if(this.configured) {
-            this.exp.use(this.config.static_route, express.static(this.config.paths.static));
+            this.exp.use(this.config.static_route, express.static(<string>this.config.paths.static));
+            this.exp.use(express_session({
+                secret: this.config.session_secret,
+                saveUninitialized: false,
+                resave: true,
+                cookie: {
+                    httpOnly: true,
+                    maxAge: 2592000000,
+                }
+            }))
             if(this.parsers.includes('json')) this.exp.use(body_parser.json());
             if(this.parsers.includes('url_encoded')) this.exp.use(body_parser.urlencoded({extended: true}));
             if(this.parsers.includes('text')) this.exp.use(body_parser.text());
@@ -108,4 +120,4 @@ class Instance {
     }
 }
 
-export = Instance;
+export { Instance };

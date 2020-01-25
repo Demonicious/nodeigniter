@@ -4,4 +4,4 @@ class Logger {
     public info = (msg : string) => console.log("\x1b[36m", `[INFO]: ${msg}`);
 }
 
-export = Logger;
+export { Logger };

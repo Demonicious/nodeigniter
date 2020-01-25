@@ -1,8 +1,9 @@
-import Instance from "./components/Instance";
-import Controller from "./components/Controller";
-import Model from "./components/Model";
-import Library from "./components/Library";
-import Logger from "./components/Logger";
-import Functions from "./components/Functions";
+import { Instance } from "./components/Instance";
+import { Controller } from "./components/Controller";
+import { Model } from "./components/Model";
+import { Library } from "./components/Library";
+import { Logger } from "./components/Logger";
+import { Functions } from "./components/Functions";
+import { Session } from "./components/Session";
 
-export { Instance, Controller, Model, Library, Logger, Functions }
+export { Instance, Controller, Model, Library, Logger, Functions, Session }

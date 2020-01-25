@@ -1,6 +1,7 @@
 declare class Library {
     ni: any;
     _paths: any;
-    constructor(paths: any);
+    _http: any;
+    constructor(paths: any, req: any);
 }
-export = Library;
+export { Library };

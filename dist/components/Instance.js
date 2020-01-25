@@ -6,8 +6,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 const module_1 = require("./../module");
 const express = __importStar(require("express"));
+const express_session_1 = __importDefault(require("express-session"));
 const body_parser = __importStar(require("body-parser"));
 const fs = __importStar(require("fs"));
 class Instance {
@@ -16,6 +21,7 @@ class Instance {
         this.controllers = {};
         this.routes = {};
         this.config = { port: 80,
+            session_secret: '',
             static_route: '/static',
             paths: {
                 models: '',
@@ -67,6 +73,15 @@ class Instance {
     launch() {
         if (this.configured) {
             this.exp.use(this.config.static_route, express.static(this.config.paths.static));
+            this.exp.use(express_session_1.default({
+                secret: this.config.session_secret,
+                saveUninitialized: false,
+                resave: true,
+                cookie: {
+                    httpOnly: true,
+                    maxAge: 2592000000,
+                }
+            }));
             if (this.parsers.includes('json'))
                 this.exp.use(body_parser.json());
             if (this.parsers.includes('url_encoded'))
@@ -97,4 +112,4 @@ class Instance {
         }
     }
 }
-module.exports = Instance;
+exports.Instance = Instance;
