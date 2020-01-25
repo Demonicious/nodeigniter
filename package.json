@@ -1,8 +1,8 @@
 {
-  "name": "nodeigniter",
+  "name": "nodeigniter.js",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/module.js",
+  "main": "./dist/module.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Demonicious/nodeigniter.git"
