@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "./dist/module.js",
+  "types": "./dist/typings/module.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Demonicious/nodeigniter.git"
+  },
+  "scripts": {
+    "prepublish": "tsc"
   },
   "keywords": [
     "framework",
