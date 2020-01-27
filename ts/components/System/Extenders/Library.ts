@@ -1,29 +1,40 @@
 import { Functions } from "./../../../module";
 
+interface LibraryLoaderObject {
+    model: Function,
+    library: Function,
+    config: Function,
+}
+
+interface NodeIgniterInstance {
+    library : any,
+    config : any,
+    model : any,
+    load : LibraryLoaderObject,
+}
+
 class Library {
-    ni : any = {};
+    ni : NodeIgniterInstance;
     _paths : any = {};
-    _http : any = {
-        request: null,
-    }
-    constructor(paths, req, db) {
+    _priv : any = {};
+    constructor(paths, db, sess) {
         this._paths = paths;
-        this._http.request = req;
+        this._priv._sess = sess;
+        this._priv._db = db;
         this.ni = {
             library: {},
             config : {},
             model : {},
-            db : db,
             load: {
                 model: (modelName : string) => {
                     let name = modelName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this['ni'].model[name] = Functions.loadModel(this._paths, this._http.request, this.ni.db, modelName);
+                    this['ni'].model[name] = Functions.loadModel(this._paths, this._priv._db, this._priv._sess, modelName);
                 },
                 library: (libraryName : string) => {
                     let name = libraryName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this.ni.library[name] = Functions.loadLibrary(this._paths, this._http.request,  this.ni.db, libraryName);
+                    this.ni.library[name] = Functions.loadLibrary(this._paths, this._priv._db, this._priv._sess, libraryName);
                 },
                 config: (configName : string) => {
                     let name = configName.replace('.js', '');

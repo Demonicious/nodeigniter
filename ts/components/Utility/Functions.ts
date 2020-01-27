@@ -23,22 +23,25 @@ const Functions = {
             let config = require(`${configsPath}/${name}`);
             return config;
         } catch(e) {
+            console.error(e);
             return e;
         }
     },
-    loadModel : (paths, req, db, name) => {
+    loadModel : (paths, db, sess, name) => {
         try {
-            let model = new (require(`${paths.models}/${name}`))(paths, db, req);
+            let model = new (require(`${paths.models}/${name}`))(paths, db, sess);
             return model;
         } catch(e) {
+            console.error(e);
             return e;
         }
     },
-    loadLibrary: (paths, req, db, name) => {
+    loadLibrary: (paths, db, sess, name) => {
         try {
-            let lib = new (require(`${paths.libraries}/${name}`))(paths, db, req);
+            let lib = new (require(`${paths.libraries}/${name}`))(paths, db, sess);
             return lib;
         } catch(e) {
+            console.error(e);
             return e;
         }
     },

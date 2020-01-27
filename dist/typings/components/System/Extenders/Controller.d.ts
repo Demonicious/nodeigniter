@@ -21,7 +21,7 @@ interface InputObject {
 }
 declare class Controller {
     _instance: Instance | any;
-    _http: HttpObject;
+    http: HttpObject;
     _toRender: string;
     input: InputObject;
     session: Session | any;
@@ -31,7 +31,7 @@ declare class Controller {
     db: any;
     load: ControllerLoaderObject;
     set_headers: Function;
-    private render;
+    render: Function;
     _log: Logger;
     _preProcessingRoute_(app: Instance, req: any, res: any, method: string, db: any): void;
 }

@@ -25,7 +25,7 @@ interface InputObject {
 
 class Controller {
     _instance : Instance | any = null;
-    _http : HttpObject = {
+    http : HttpObject = {
         request: null,
         response: null,
         head: {
@@ -41,7 +41,7 @@ class Controller {
         post : {},
         params: {},
     }
-    session: Session | any = null; 
+    session: Session | any = new Session(null); 
     library : any = {};
     model : any = {};
     config : any = {};
@@ -54,13 +54,13 @@ class Controller {
         model: (modelName : string) => {
             let name = modelName.replace(".js", "");
             name = name.replace(".ts", "");
-            this.model[name] = Functions.loadModel(this._instance.config.paths, this._http.request, this.db, modelName);
+            this.model[name] = Functions.loadModel(this._instance.config.paths, this.db, this.session, modelName);
             return;
         },
         library: (libraryName : string) => {
             let name = libraryName.replace(".js", "");
             name = name.replace(".ts", "");
-            this.library[name] = Functions.loadLibrary(this._instance.config.paths, this._http.request, this.db, libraryName);
+            this.library[name] = Functions.loadLibrary(this._instance.config.paths, this.db, this.session, libraryName);
             return;
         },
         config: (configName : string) => {
@@ -70,21 +70,21 @@ class Controller {
         }
     };
     set_headers : Function = (code : number, headers : any) => {
-        this._http.head.code = code;
-        this._http.head.headers = headers;
+        this.http.head.code = code;
+        this.http.head.headers = headers;
     }
-    private render : Function = () => {
-        this._http.response.writeHead(this._http.head.code, this._http.head.headers);
-        this._http.response.write(this._toRender);
-        this._http.response.end();
+    render : Function = () => {
+        this.http.response.writeHead(this.http.head.code, this.http.head.headers);
+        this.http.response.write(this._toRender);
+        this.http.response.end();
     }
     _log : Logger = new Logger;
 
     public _preProcessingRoute_(app : Instance, req : any, res : any, method: string, db : any) {
         this._instance = app;
-        this._http.request = req,
-        this._http.response = res,
-        this.session = new Session(this._http.request);
+        this.http.request = req,
+        this.http.response = res,
+        this.session = new Session(this.http.request);
         this.db = db;
         this.input = {
             get: req.query,
@@ -92,7 +92,6 @@ class Controller {
             params: req.params,
         }
         this[method]();
-        this.render();
         return;
     }
 }

@@ -6,41 +6,31 @@ interface ModelLoaderObject {
     config : Function
 }
 
-interface InputObject {
-    get : any,
-    post : any,
-    params: any,
-}
-
 class Model {
     _log : Logger = new Logger;
     _paths : any = {};
-    _http : any = {
-        request: null,
-    }
 
     db : any = null;
     library : any = {};
     config : any = {};
     model : any = {};
-    session : Session | any = null;
-    constructor(paths, req, db) {
+    session : Session = new Session(null);
+    constructor(paths, db, sess : Session) {
         this._paths = paths;
-        this._http.request = req;
         this.db = db;
-        this.session = new Session(this._http.request);
+        this.session = sess;
     }
     load : ModelLoaderObject = {
         model: (modelName : string) => {
             let name = modelName.replace(".js", "");
             name = name.replace(".ts", "");
-            this.model[name] = Functions.loadModel(this._paths, this._http.request, this.db, name);
+            this.model[name] = Functions.loadModel(this._paths, this.db, this.session, name);
             return;
         },
         library: (libraryName : string) => {
             let name = libraryName.replace('.js', '');
             name = name.replace('.ts', '');
-            this.library[name] = Functions.loadLibrary(this._paths, this._http.request, this.db, libraryName);
+            this.library[name] = Functions.loadLibrary(this._paths, this.db, this.session, libraryName);
          },
         config: (configName : string) => {
             let name = configName.replace(".js", "");
@@ -48,7 +38,6 @@ class Model {
             this.config[name] = Functions.loadConfig(this._paths.configs, configName);
         }
     }
-    input : InputObject | any = null;
 }
 
 export { Model };

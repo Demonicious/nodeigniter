@@ -1,7 +1,18 @@
+interface LibraryLoaderObject {
+    model: Function;
+    library: Function;
+    config: Function;
+}
+interface NodeIgniterInstance {
+    library: any;
+    config: any;
+    model: any;
+    load: LibraryLoaderObject;
+}
 declare class Library {
-    ni: any;
+    ni: NodeIgniterInstance;
     _paths: any;
-    _http: any;
-    constructor(paths: any, req: any, db: any);
+    _priv: any;
+    constructor(paths: any, db: any, sess: any);
 }
 export { Library };

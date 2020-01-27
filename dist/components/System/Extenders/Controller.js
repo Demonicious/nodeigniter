@@ -4,7 +4,7 @@ const module_1 = require("../../../module");
 class Controller {
     constructor() {
         this._instance = null;
-        this._http = {
+        this.http = {
             request: null,
             response: null,
             head: {
@@ -20,7 +20,7 @@ class Controller {
             post: {},
             params: {},
         };
-        this.session = null;
+        this.session = new module_1.Session(null);
         this.library = {};
         this.model = {};
         this.config = {};
@@ -33,13 +33,13 @@ class Controller {
             model: (modelName) => {
                 let name = modelName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this.model[name] = module_1.Functions.loadModel(this._instance.config.paths, this._http.request, this.db, modelName);
+                this.model[name] = module_1.Functions.loadModel(this._instance.config.paths, this.db, this.session, modelName);
                 return;
             },
             library: (libraryName) => {
                 let name = libraryName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this.library[name] = module_1.Functions.loadLibrary(this._instance.config.paths, this._http.request, this.db, libraryName);
+                this.library[name] = module_1.Functions.loadLibrary(this._instance.config.paths, this.db, this.session, libraryName);
                 return;
             },
             config: (configName) => {
@@ -49,21 +49,21 @@ class Controller {
             }
         };
         this.set_headers = (code, headers) => {
-            this._http.head.code = code;
-            this._http.head.headers = headers;
+            this.http.head.code = code;
+            this.http.head.headers = headers;
         };
         this.render = () => {
-            this._http.response.writeHead(this._http.head.code, this._http.head.headers);
-            this._http.response.write(this._toRender);
-            this._http.response.end();
+            this.http.response.writeHead(this.http.head.code, this.http.head.headers);
+            this.http.response.write(this._toRender);
+            this.http.response.end();
         };
         this._log = new module_1.Logger;
     }
     _preProcessingRoute_(app, req, res, method, db) {
         this._instance = app;
-        this._http.request = req,
-            this._http.response = res,
-            this.session = new module_1.Session(this._http.request);
+        this.http.request = req,
+            this.http.response = res,
+            this.session = new module_1.Session(this.http.request);
         this.db = db;
         this.input = {
             get: req.query,
@@ -71,7 +71,6 @@ class Controller {
             params: req.params,
         };
         this[method]();
-        this.render();
         return;
     }
 }

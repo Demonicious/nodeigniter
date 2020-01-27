@@ -4,22 +4,15 @@ interface ModelLoaderObject {
     library: Function;
     config: Function;
 }
-interface InputObject {
-    get: any;
-    post: any;
-    params: any;
-}
 declare class Model {
     _log: Logger;
     _paths: any;
-    _http: any;
     db: any;
     library: any;
     config: any;
     model: any;
-    session: Session | any;
-    constructor(paths: any, req: any, db: any);
+    session: Session;
+    constructor(paths: any, db: any, sess: Session);
     load: ModelLoaderObject;
-    input: InputObject | any;
 }
 export { Model };
