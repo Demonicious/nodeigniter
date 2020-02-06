@@ -13,6 +13,7 @@ interface ControllerLoaderObject {
     model: Function;
     library: Function;
     config: Function;
+    helper: Function;
 }
 interface InputObject {
     get: any;
@@ -25,9 +26,8 @@ declare class Controller {
     _toRender: string;
     input: InputObject;
     session: Session | any;
-    library: any;
-    model: any;
     config: any;
+    helper: any;
     db: any;
     load: ControllerLoaderObject;
     set_headers: Function;

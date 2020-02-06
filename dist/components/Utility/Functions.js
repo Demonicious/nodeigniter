@@ -37,9 +37,9 @@ const Functions = {
             return e;
         }
     },
-    loadModel: (paths, db, sess, name) => {
+    loadModel: (autoload, paths, db, sess, name) => {
         try {
-            let model = new (require(`${paths.models}/${name}`))(paths, db, sess);
+            let model = new (require(`${paths.models}/${name}`))(autoload, paths, db, sess);
             return model;
         }
         catch (e) {
@@ -47,10 +47,20 @@ const Functions = {
             return e;
         }
     },
-    loadLibrary: (paths, db, sess, name) => {
+    loadLibrary: (autoload, paths, db, sess, name) => {
         try {
-            let lib = new (require(`${paths.libraries}/${name}`))(paths, db, sess);
+            let lib = new (require(`${paths.libraries}/${name}`))(autoload, paths, db, sess);
             return lib;
+        }
+        catch (e) {
+            console.error(e);
+            return e;
+        }
+    },
+    loadHelperFunctions: (helpersPath, name) => {
+        try {
+            let helpers = require(`${helpersPath}/${name}`);
+            return helpers;
         }
         catch (e) {
             console.error(e);

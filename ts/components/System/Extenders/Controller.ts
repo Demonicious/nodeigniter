@@ -14,7 +14,8 @@ interface ControllerLoaderObject {
     view : Function,
     model : Function,
     library : Function,
-    config : Function
+    config : Function,
+    helper: Function,
 }
 
 interface InputObject {
@@ -42,33 +43,38 @@ class Controller {
         params: {},
     }
     session: Session | any = new Session(null); 
-    library : any = {};
-    model : any = {};
     config : any = {};
+    helper : any = {};
     db : any = {};
-    load : ControllerLoaderObject = {
-        view: (viewName : string, data : any) => {
+    load: ControllerLoaderObject = {
+        view: (viewName: string, data: any) => {
             this._toRender += Functions.loadView(this._instance.config.paths.views, viewName, data);
-            return;
         },
-        model: (modelName : string) => {
+        model: (modelName: string) => {
             let name = modelName.replace(".js", "");
             name = name.replace(".ts", "");
-            this.model[name] = Functions.loadModel(this._instance.config.paths, this.db, this.session, modelName);
-            return;
+            this[name] = Functions.loadModel(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
         },
-        library: (libraryName : string) => {
+        library: (libraryName: string) => {
             let name = libraryName.replace(".js", "");
             name = name.replace(".ts", "");
-            this.library[name] = Functions.loadLibrary(this._instance.config.paths, this.db, this.session, libraryName);
-            return;
+            this[name.toLowerCase()] = Functions.loadLibrary(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
         },
-        config: (configName : string) => {
+        config: (configName: string) => {
             let name = configName.replace(".js", "");
             name = name.replace(".ts", "");
-            this.config[name] = Functions.loadConfig(this._instance.config.paths.configs, configName);
+            this.config[name] = Functions.loadConfig(this._instance.config.paths.configs, name);
+        },
+        helper: (helperName: string) => {
+            let name = helperName.replace(".js", "");
+            name = name.replace(".ts", "");
+            let helpers: any = Functions.loadHelperFunctions(this._instance.config.paths.helpers, name);
+            let helper: any = null;
+            for (helper in helpers) {
+                this.helper[helper] = helpers[helper];
+            }
         }
-    };
+    }
     set_headers : Function = (code : number, headers : any) => {
         this.http.head.code = code;
         this.http.head.headers = headers;
@@ -91,6 +97,11 @@ class Controller {
             post: req.body,
             params: req.params,
         }
+
+        if (app.autoload.models.length > 0) { app.autoload.models.forEach((model) => { this.load.model(model); }); }
+        if (app.autoload.libraries.length > 0) { app.autoload.libraries.forEach((library) => { this.load.library(library); }); }
+        if (app.autoload.configs.length > 0) { app.autoload.configs.forEach((config) => { this.load.config(config); }); }
+        if (app.autoload.helpers.length > 0) { app.autoload.helpers.forEach((helper) => { this.load.helper(helper); }); }
         this[method]();
         return;
     }

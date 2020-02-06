@@ -8,6 +8,7 @@ interface PathObject {
     controllers: fs.PathLike;
     libraries: fs.PathLike;
     configs: fs.PathLike;
+    helpers: fs.PathLike;
     static: fs.PathLike;
 }
 interface InstanceConfig {
@@ -18,12 +19,19 @@ interface InstanceConfig {
     reportRequests: boolean;
     environment: string | 'DEVELOPMENT' | 'PRODUCTION';
 }
+interface AutoloadObject {
+    models: string[];
+    libraries: string[];
+    configs: string[];
+    helpers: string[];
+}
 declare class Instance {
     exp: express.Application;
     controllers: any;
     routes: any;
     _db: any;
     database_controller: any;
+    autoload: AutoloadObject;
     config: InstanceConfig;
     configured: boolean;
     parsers: string[];
@@ -31,6 +39,7 @@ declare class Instance {
     registerRoutes(routes: any): Instance;
     setParsers(parsers: string[]): Instance;
     setDatabase(details: any): void;
+    setAutoload(autoload: AutoloadObject): void;
     configure(config: InstanceConfig): Instance;
     launch(): void;
 }

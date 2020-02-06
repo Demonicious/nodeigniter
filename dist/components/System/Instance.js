@@ -25,6 +25,12 @@ class Instance {
             details: null,
         };
         this.database_controller = null;
+        this.autoload = {
+            models: [],
+            libraries: [],
+            configs: [],
+            helpers: [],
+        };
         this.config = { port: 80,
             session_secret: '',
             static_route: '/static',
@@ -34,6 +40,7 @@ class Instance {
                 controllers: '',
                 libraries: '',
                 configs: '',
+                helpers: '',
                 static: '',
             },
             reportRequests: true,
@@ -62,6 +69,10 @@ class Instance {
             type: 1,
             details: details
         };
+    }
+    setAutoload(autoload) {
+        this.autoload = autoload;
+        return;
     }
     configure(config) {
         if (this.config != config) {
