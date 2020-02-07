@@ -53,12 +53,12 @@ class Controller {
         model: (modelName: string) => {
             let name = modelName.replace(".js", "");
             name = name.replace(".ts", "");
-            this[name] = Functions.loadModel(this._instance.config.paths, this.db, this.session, name);
+            this[name] = Functions.loadModel(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
         },
         library: (libraryName: string) => {
             let name = libraryName.replace(".js", "");
             name = name.replace(".ts", "");
-            this[name.toLowerCase()] = Functions.loadLibrary(this._instance.config.paths, this.db, this.session, name);
+            this[name.toLowerCase()] = Functions.loadLibrary(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
         },
         config: (configName: string) => {
             let name = configName.replace(".js", "");

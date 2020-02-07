@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const module_1 = require("./../../../module");
 class Library {
-    constructor(paths, db, sess) {
+    constructor(autoload, paths, db, sess) {
         this._paths = {};
         this._priv = {};
         this._paths = paths;
@@ -15,12 +15,12 @@ class Library {
                 model: (modelName) => {
                     let name = modelName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this.ni[name] = module_1.Functions.loadModel(this._paths, this._priv._db, this._priv._sess, name);
+                    this.ni[name] = module_1.Functions.loadModel(autoload, this._paths, this._priv._db, this._priv._sess, name);
                 },
                 library: (libraryName) => {
                     let name = libraryName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this.ni[name.toLowerCase()] = module_1.Functions.loadLibrary(this._paths, this._priv._db, this._priv._sess, name);
+                    this.ni[name.toLowerCase()] = module_1.Functions.loadLibrary(autoload, this._paths, this._priv._db, this._priv._sess, name);
                 },
                 config: (configName) => {
                     let name = configName.replace('.js', '');
@@ -38,6 +38,10 @@ class Library {
                 }
             }
         };
+        if (autoload.configs.length > 0)
+            autoload.configs.forEach((config) => { config = config.toString(); this.ni.load.config(config); });
+        if (autoload.helpers.length > 0)
+            autoload.helpers.forEach((helper) => { helper = helper.toString(); this.ni.load.helper(helper); });
     }
 }
 exports.Library = Library;

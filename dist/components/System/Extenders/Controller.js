@@ -31,12 +31,12 @@ class Controller {
             model: (modelName) => {
                 let name = modelName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this[name] = module_1.Functions.loadModel(this._instance.config.paths, this.db, this.session, name);
+                this[name] = module_1.Functions.loadModel(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
             },
             library: (libraryName) => {
                 let name = libraryName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this[name.toLowerCase()] = module_1.Functions.loadLibrary(this._instance.config.paths, this.db, this.session, name);
+                this[name.toLowerCase()] = module_1.Functions.loadLibrary(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
             },
             config: (configName) => {
                 let name = configName.replace(".js", "");

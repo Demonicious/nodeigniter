@@ -17,7 +17,7 @@ class Library {
     ni : NodeIgniterInstance;
     _paths : any = {};
     _priv : any = {};
-    constructor(paths, db, sess) {
+    constructor(autoload, paths, db, sess) {
         this._paths = paths;
         this._priv._sess = sess;
         this._priv._db = db;
@@ -28,12 +28,12 @@ class Library {
                 model: (modelName : string) => {
                     let name = modelName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this.ni[name] = Functions.loadModel(this._paths, this._priv._db, this._priv._sess, name);
+                    this.ni[name] = Functions.loadModel(autoload, this._paths, this._priv._db, this._priv._sess, name);
                 },
                 library: (libraryName : string) => {
                     let name = libraryName.replace('.js', '');
                     name = name.replace('.ts', '');
-                    this.ni[name.toLowerCase()] = Functions.loadLibrary(this._paths, this._priv._db, this._priv._sess, name);
+                    this.ni[name.toLowerCase()] = Functions.loadLibrary(autoload, this._paths, this._priv._db, this._priv._sess, name);
                 },
                 config: (configName : string) => {
                     let name = configName.replace('.js', '');
@@ -51,6 +51,9 @@ class Library {
                 }
             }
         }
+
+        if (autoload.configs.length > 0) autoload.configs.forEach((config) => { config = config.toString(); this.ni.load.config(config); });
+        if (autoload.helpers.length > 0) autoload.helpers.forEach((helper) => { helper = helper.toString(); this.ni.load.helper(helper); });
     }
 
 }
