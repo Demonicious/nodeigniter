@@ -46,6 +46,7 @@ class Model {
     _doAutoloads_ = (autoload) => {
         if (autoload.configs.length > 0) { autoload.configs.forEach((config) => { this.load.config(config.toString()); }); }
         if (autoload.helpers.length > 0) { autoload.helpers.forEach((helper) => { this.load.helper(helper.toString()); }); }
+        if (autoload.libraries.length > 0) autoload.libraries.forEach((library) => { library = library.toString(); this.load.library(library); });
     }
 
     constructor(autoload, paths, db, sess : Session) {

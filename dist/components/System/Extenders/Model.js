@@ -43,6 +43,8 @@ class Model {
             if (autoload.helpers.length > 0) {
                 autoload.helpers.forEach((helper) => { this.load.helper(helper.toString()); });
             }
+            if (autoload.libraries.length > 0)
+                autoload.libraries.forEach((library) => { library = library.toString(); this.load.library(library); });
         };
         this._paths = paths;
         this._autoload = autoload;
