@@ -108,6 +108,6 @@ const Functions = {
                 delete session[prop];
             }
         }
-    }
+    },
 };
 exports.Functions = Functions;

@@ -53,9 +53,9 @@ class Controller {
                 }
             }
         };
-        this.set_headers = (code, headers) => {
-            this.http.head.code = code;
-            this.http.head.headers = headers;
+        this.set_headers = (StatusCode, HttpHeaders) => {
+            this.http.head.code = StatusCode;
+            this.http.head.headers = HttpHeaders;
         };
         this.render = () => {
             this.http.response.writeHead(this.http.head.code, this.http.head.headers);
@@ -63,6 +63,12 @@ class Controller {
             this.http.response.end();
         };
         this._log = new module_1.Logger;
+    }
+    json_respond(StatusCode, DataObject) {
+        this.set_headers(StatusCode, { 'Content-Type': 'application/json' });
+        this.http.response.writeHead(this.http.head.code, this.http.head.headers);
+        this.http.response.write(JSON.stringify(DataObject));
+        this.http.response.end();
     }
     _preProcessingRoute_(app, req, res, method, db) {
         this._instance = app;

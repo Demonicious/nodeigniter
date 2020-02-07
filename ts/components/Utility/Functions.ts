@@ -93,7 +93,7 @@ const Functions = {
                 delete session[prop];
             }
         }
-    }
+    },
 }
 
 export { Functions };

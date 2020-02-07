@@ -75,9 +75,9 @@ class Controller {
             }
         }
     }
-    set_headers : Function = (code : number, headers : any) => {
-        this.http.head.code = code;
-        this.http.head.headers = headers;
+    set_headers : Function = (StatusCode : number, HttpHeaders : any) => {
+        this.http.head.code = StatusCode;
+        this.http.head.headers = HttpHeaders;
     }
     render : Function = () => {
         this.http.response.writeHead(this.http.head.code, this.http.head.headers);
@@ -85,6 +85,13 @@ class Controller {
         this.http.response.end();
     }
     _log : Logger = new Logger;
+
+    public json_respond(StatusCode : number, DataObject : any) {
+        this.set_headers(StatusCode, {'Content-Type':'application/json'});
+        this.http.response.writeHead(this.http.head.code, this.http.head.headers);
+        this.http.response.write(JSON.stringify(DataObject));
+        this.http.response.end();
+    }
 
     public _preProcessingRoute_(app : Instance, req : any, res : any, method: string, db : any) {
         this._instance = app;
