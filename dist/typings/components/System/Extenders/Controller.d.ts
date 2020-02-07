@@ -34,6 +34,7 @@ declare class Controller {
     render: Function;
     _log: Logger;
     json_respond(StatusCode: number, DataObject: any): void;
+    _doAutoloads_: (app: any) => void;
     _preProcessingRoute_(app: Instance, req: any, res: any, method: string, db: any): void;
 }
 export { Controller };

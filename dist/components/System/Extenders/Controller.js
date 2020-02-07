@@ -31,12 +31,12 @@ class Controller {
             model: (modelName) => {
                 let name = modelName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this[name] = module_1.Functions.loadModel(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
+                this[name] = module_1.Functions.loadModel(this._instance.config.paths, this.db, this.session, name);
             },
             library: (libraryName) => {
                 let name = libraryName.replace(".js", "");
                 name = name.replace(".ts", "");
-                this[name.toLowerCase()] = module_1.Functions.loadLibrary(this._instance.autoload, this._instance.config.paths, this.db, this.session, name);
+                this[name.toLowerCase()] = module_1.Functions.loadLibrary(this._instance.config.paths, this.db, this.session, name);
             },
             config: (configName) => {
                 let name = configName.replace(".js", "");
@@ -63,6 +63,20 @@ class Controller {
             this.http.response.end();
         };
         this._log = new module_1.Logger;
+        this._doAutoloads_ = (app) => {
+            if (app.autoload.models.length > 0) {
+                app.autoload.models.forEach((model) => { this.load.model(model.toString()); });
+            }
+            if (app.autoload.libraries.length > 0) {
+                app.autoload.libraries.forEach((library) => { this.load.library(library.toString()); });
+            }
+            if (app.autoload.configs.length > 0) {
+                app.autoload.configs.forEach((config) => { this.load.config(config.toString()); });
+            }
+            if (app.autoload.helpers.length > 0) {
+                app.autoload.helpers.forEach((helper) => { this.load.helper(helper.toString()); });
+            }
+        };
     }
     json_respond(StatusCode, DataObject) {
         this.set_headers(StatusCode, { 'Content-Type': 'application/json' });
@@ -81,18 +95,7 @@ class Controller {
             post: req.body,
             params: req.params,
         };
-        if (app.autoload.models.length > 0) {
-            app.autoload.models.forEach((model) => { this.load.model(model); });
-        }
-        if (app.autoload.libraries.length > 0) {
-            app.autoload.libraries.forEach((library) => { this.load.library(library); });
-        }
-        if (app.autoload.configs.length > 0) {
-            app.autoload.configs.forEach((config) => { this.load.config(config); });
-        }
-        if (app.autoload.helpers.length > 0) {
-            app.autoload.helpers.forEach((helper) => { this.load.helper(helper); });
-        }
+        this._doAutoloads_(this._instance);
         this[method]();
         return;
     }

@@ -65,14 +65,26 @@ class Instance {
         return this;
     }
     setDatabase(details) {
-        this._db = {
-            type: 1,
-            details: details
-        };
+        if (details.enabled) {
+            this._db = {
+                type: 1,
+                enabled: true,
+                details: {
+                    host: details.host,
+                    port: details.port,
+                    user: details.user,
+                    password: details.password,
+                    database: details.database
+                }
+            };
+        }
     }
     setAutoload(autoload) {
-        this.autoload = autoload;
-        return;
+        let prop = null;
+        for (prop in autoload) {
+            this.autoload[prop] = autoload[prop];
+        }
+        return this;
     }
     configure(config) {
         if (this.config != config) {

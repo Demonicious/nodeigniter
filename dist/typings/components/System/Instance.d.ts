@@ -39,7 +39,7 @@ declare class Instance {
     registerRoutes(routes: any): Instance;
     setParsers(parsers: string[]): Instance;
     setDatabase(details: any): void;
-    setAutoload(autoload: AutoloadObject): void;
+    setAutoload(autoload: AutoloadObject): Instance;
     configure(config: InstanceConfig): Instance;
     launch(): void;
 }
