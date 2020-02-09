@@ -1,6 +1,6 @@
 {
   "name": "nodeigniter.js",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "",
   "main": "./dist/module.js",
   "types": "./dist/typings/module.d.ts",
