@@ -1,6 +1,5 @@
 import { Logger } from "./../../../module";
 import sync_mysql from "sync-mysql";
-import knex from "knex";
 
 interface DatabaseDetails {
     host : string,
@@ -15,9 +14,6 @@ class MySQL {
     builder : any = null;
     constructor(details : DatabaseDetails) {
         this._conn = new sync_mysql(details);
-        this.builder = knex({
-            client: 'mysql'
-        });
     }
 
     public query(SQL_Query : string, bindings : any = null) {
